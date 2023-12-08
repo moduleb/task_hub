@@ -1,7 +1,7 @@
-CREATE TABLE IF NOT EXISTS users(
+CREATE TABLE IF NOT EXISTS tasks(
             id INT PRIMARY KEY AUTO_INCREMENT,
-            username VARCHAR(100) UNIQUE,
-            password VARCHAR(100) NOT NULL,
-            email VARCHAR(255) UNIQUE,
-            registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            INDEX (username));
+            taskname VARCHAR(100),
+            description VARCHAR(500),
+            category VARCHAR(100),
+            creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            INDEX (taskname));

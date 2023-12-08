@@ -8,7 +8,7 @@
 + [Описание](#description)
 + [Установка и запуск](#install)
 + [API Endpoints:](#api_endpoints)
-  + [Создание новой задачи](#put)
+  + [Создание новой задачи](#post)
   + [Получение списка всех задач](#get)
   + [Получение задачи по идентификатору](#get_one)
   + [Обновление задачи](#update)
@@ -62,40 +62,10 @@ docker compose up -d --build
  - Address: [http://0.0.0.0:8000](http://0.0.0.0:8000/users)
  - Документация Swagger [http://0.0.0.0:8000/docs](http://0.0.0.0:8000/docs)
 
-<a id="register"></a>
-## Register
->Регистрация пользователя
-
-#### Request
-
-`POST /users/register`
-
-```json
-{
- "username": "exampleUser",
- "password": "examplePassword",
- "email": "example@example.com"
-}
-```
-
-#### Response
-
-`200 Successful`
-
-```json
-{
- "data": {
-   "username": "exampleUser",
-   "email": "example@example.com"
- },
- "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2",
- "token_type": "bearer"
-}
-```
 
 <a id="update"></a>
 ## Update
->Обновление информации о пользователе
+>Обновление информации о задании
 
 #### Request
 **`PUT /users`**
@@ -107,11 +77,6 @@ docker compose up -d --build
 }
 ```
 
-Требуется наличие токена в заголовке авторизации.
-
-```
-Authorization: <exampleToken>
-```
 
 #### Response
 
@@ -127,48 +92,6 @@ Authorization: <exampleToken>
 }
 ```
 
-<a id="login"></a>
-## Login
->Аутентификация пользователя
-
-#### Request
-
-**`POST /users/login`**
-
-```json
-{
- "username": "exampleUser",
- "password": "examplePassword"
-}
-```
-
-#### Response
-
-`200 Successful`
-
-```json
-{
-   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2",
-   "token_type": "bearer"
- }
-```
-<a id="logout"></a>
-## Logout
->Выход из системы
-
-#### Request
-
-`POST /users/logout`
-
-Требуется наличие токена в заголовке авторизации.
-
-```
-Authorization: <exampleToken>
-```
-
-#### Response
-
-`204 No Content`
 
 ## Delete
 >Удаление пользователя
@@ -177,29 +100,19 @@ Authorization: <exampleToken>
 
 `DELETE /users`
 
-Требуется наличие токена в заголовке авторизации.
-
-```
-Authorization: <exampleToken>
-```
 
 #### Response
 
 `204 No Content`
 
-<a id="get_info"></a>
+<a id="get_one"></a>
 ## Get info
->Получение информации о пользователе
+>Получение информации о задании
 
 #### Request
 
-`GET /users`
+`GET /users/{task_id}`
 
-Требуется наличие токена в заголовке авторизации.
-
-```
-Authorization: <exampleToken>
-```
 
 #### Response
 
@@ -212,6 +125,27 @@ Authorization: <exampleToken>
  "registration_date": "2023-12-01T07:34:21"
 }
 ```
+<a id="get_all"></a>
+## Get info
+>Получение информации о всех заданиях
+
+#### Request
+
+`GET /users`
+
+
+#### Response
+
+`200 Successful`
+
+```json
+{
+ "username": "exampleUser",
+ "email": "example@example.com",
+ "registration_date": "2023-12-01T07:34:21"
+}
+```
+
 <a id="errors"></a>
 ## Errors
 
