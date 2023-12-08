@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, Response
 from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse
-from app.database import get_cursor
-from app.dto.task_dao import TaskService
-from app.dto.task_dto import TaskDTO
+
+from app.database import db
+from app.models.task_dto import TaskDTO
+from app.services.db_service import TaskService
 
 router = APIRouter()
 task_service = TaskService()
@@ -15,7 +16,7 @@ task_service = TaskService()
              description=" - Требует токен в заголовке Authorization \n"
                          " - Возвращает обновленную информацию о текущем пользователе: username и email")
 async def create(data: TaskDTO,
-                 cursor=Depends(get_cursor)) -> Response:
+                 cursor=Depends(db.get_cursor)) -> Response:
     await task_service.create(cursor, data)
     response_data = {'msg': 'task created successfully'}
     json_data = jsonable_encoder(response_data)
@@ -27,7 +28,7 @@ async def create(data: TaskDTO,
             description=" - Требует токен в заголовке Authorization \n"
                         " - Возвращает информацию о текущем пользователе: username, email, registration date")
 async def get_one(task_id: int = None,
-                  cursor=Depends(get_cursor)) -> Response:
+                  cursor=Depends(db.get_cursor)) -> Response:
     pass
     data = await task_service.get_one(cursor, task_id)
     json_data = jsonable_encoder({'data': data})
@@ -38,7 +39,7 @@ async def get_one(task_id: int = None,
 @router.get("/", summary="Получение информации о всех заданиях",
             description=" - Требует токен в заголовке Authorization \n"
                         " - Возвращает информацию о текущем пользователе: username, email, registration date")
-async def get_all(cursor=Depends(get_cursor)) -> Response:
+async def get_all(cursor=Depends(db.get_cursor)) -> Response:
     pass
     data = await task_service.get_all(cursor)
     json_data = jsonable_encoder({'data': data})
@@ -51,7 +52,7 @@ async def get_all(cursor=Depends(get_cursor)) -> Response:
             description=" - Требует токен в заголовке Authorization \n"
                         " - Возвращает обновленную информацию о текущем пользователе: username и email")
 async def update(data: TaskDTO,
-                 cursor=Depends(get_cursor)) -> Response:
+                 cursor=Depends(db.get_cursor)) -> Response:
     pass
     # data.password = await AuthService.hash_pass(data.password)
     # await UserService.update(cursor, username, data)
@@ -66,7 +67,7 @@ async def update(data: TaskDTO,
                description=" - Требует токен в заголовке Authorization \n"
                            " - Удаляет задании из базы данных")
 async def delete(task_id: int = None,
-                 cursor=Depends(get_cursor)):
+                 cursor=Depends(db.get_cursor)):
     await task_service.get_one(cursor, task_id)
     await task_service.delete(cursor, task_id)
     response_data = {'msg': 'task deleted successfully'}

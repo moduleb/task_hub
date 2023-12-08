@@ -4,7 +4,7 @@ import string
 import pytest as pytest
 from pydantic_core._pydantic_core import ValidationError
 
-from app.dto.task_dto import TaskDTO
+from app.models.task_dto import TaskDTO
 
 spec_chars = string.punctuation
 
