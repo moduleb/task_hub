@@ -1,0 +1,6 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+RUN pip install pytest requests faker python-dotenv
+COPY /tests ./tests
+CMD pytest
