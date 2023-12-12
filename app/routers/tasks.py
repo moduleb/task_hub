@@ -1,75 +1,109 @@
+"""
+CRUD API сервисы для /tasks
+
+Все входные данные проверяются pydantic. Схемы хранятся в app.models
+В каждой функции получаем курсор для работы с базой данных 'cursor=Depends(db.get_cursor)'
+и передаем его классу для работы с базой данных 'db_service'
+
+В конце работы функции формируем ответный словарь,
+преобразуем в json и отправляем.
+"""
+
 from fastapi import APIRouter, Depends, Response
 from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse
 
-from app.database import db
+from app.database import DB
 from app.models.task_dto import TaskDTO
-from app.services.db_service import TaskService
+from app.services.mysql import TaskService
 
 router = APIRouter()
-task_service = TaskService()
+db_service = TaskService()
+db = DB()
 
 
-# CREATE
 @router.post("/",
              summary="Создание нового задания",
              description=" - Требует токен в заголовке Authorization \n"
-                         " - Возвращает обновленную информацию о текущем пользователе: username и email")
-async def create(data: TaskDTO,
-                 cursor=Depends(db.get_cursor)) -> Response:
-    await task_service.create(cursor, data)
+                         " - Возвращает обновленную")
+async def create(data: TaskDTO, cursor=Depends(db.get_cursor)) -> Response:
+    """
+    При удачном добавлении записи db_service ничего не вернет.
+    При исключении, сам отправит HTTP ошибку.
+    """
+    # Создаем запись в базе данных.
+    await db_service.create(cursor, data)
+
+    # Формируем response, преобразовываем в json и отправляем.
     response_data = {'msg': 'task created successfully'}
     json_data = jsonable_encoder(response_data)
     return JSONResponse(content=json_data)
 
 
-# GET ONE
-@router.get("/{task_id}", summary="Получение информации о задании",
+@router.get("/{task_id}",
+            summary="Получение информации о задании",
             description=" - Требует токен в заголовке Authorization \n"
-                        " - Возвращает информацию о текущем пользователе: username, email, registration date")
-async def get_one(task_id: int = None,
-                  cursor=Depends(db.get_cursor)) -> Response:
-    pass
-    data = await task_service.get_one(cursor, task_id)
-    json_data = jsonable_encoder({'data': data})
+                        " - Возвращает информацию о текущем ")
+async def get_one(task_id: int, cursor=Depends(db.get_cursor)) -> Response:
+    """
+    Получаем запись из базы данных с полученным task_id.
+    При удачном добавлении записи db_service ничего не вернет.
+    При исключении, сам отправит HTTP ошибку.
+    """
+    data = await db_service.get_one(cursor, task_id)
+
+    # Формируем response, преобразовываем в json и отправляем.
+    response_data = {'data': data}
+    json_data = jsonable_encoder(response_data)
     return JSONResponse(content=json_data)
 
 
-# GET ALL
 @router.get("/", summary="Получение информации о всех заданиях",
             description=" - Требует токен в заголовке Authorization \n"
-                        " - Возвращает информацию о текущем пользователе: username, email, registration date")
+                        " - Возвращает информацию о текущем п")
 async def get_all(cursor=Depends(db.get_cursor)) -> Response:
-    pass
-    data = await task_service.get_all(cursor)
-    json_data = jsonable_encoder({'data': data})
+    """
+    Получаем все записи из базы данных.
+    При удачном поиске db_service вернет список словарей в формате
+    [{taskname: str, description: str, category: str, creation_date: datatime}, {...}]
+    Если ничего не найдет, пришлет пустой список.
+    """
+    data: list = await db_service.get_all(cursor)
+
+    # Формируем response, преобразовываем в json и отправляем.
+    response_data = {'data': data}
+    json_data = jsonable_encoder(response_data)
     return JSONResponse(content=json_data)
 
 
-# UPDATE
-@router.put("/",
-            summary="Обновление данных задания",
-            description=" - Требует токен в заголовке Authorization \n"
-                        " - Возвращает обновленную информацию о текущем пользователе: username и email")
-async def update(data: TaskDTO,
-                 cursor=Depends(db.get_cursor)) -> Response:
-    pass
-    # data.password = await AuthService.hash_pass(data.password)
-    # await UserService.update(cursor, username, data)
-    # data = await UserService.get_one_by_username(cursor, username)
-    # json_data = jsonable_encoder({'data': data})
-    # return JSONResponse(content=json_data)
+# @router.put("/",
+#             summary="Обновление данных задания",
+#             description=" - Требует токен в заголовке Authorization \n"
+#                         " - Возвращает обновленную информацию")
+# async def update(data: TaskDTO,
+#                  cursor=Depends(db.get_cursor)) -> Response:
+#     pass
+# data.password = await AuthService.hash_pass(data.password)
+# await UserService.update(cursor, username, data)
+# data = await UserService.get_one_by_username(cursor, username)
+# json_data = jsonable_encoder({'data': data})
+# return JSONResponse(content=json_data)
 
 
-# DELETE
 @router.delete("/{task_id}",
                summary="Удаление задании",
                description=" - Требует токен в заголовке Authorization \n"
                            " - Удаляет задании из базы данных")
-async def delete(task_id: int = None,
-                 cursor=Depends(db.get_cursor)):
-    await task_service.get_one(cursor, task_id)
-    await task_service.delete(cursor, task_id)
-    response_data = {'msg': 'task deleted successfully'}
+async def delete(task_id: int, cursor=Depends(db.get_cursor)) -> Response:
+    # await db_service.get_one(cursor, task_id)
+    """
+    Удаляем запись с полученным task_id из базы данных.
+    При удачном удалении записи db_service ничего не вернет.
+    При исключении, сам отправит HTTP ошибку.
+    """
+    await db_service.delete(cursor, task_id)
+
+    # Формируем response, преобразовываем в json и отправляем.
+    response_data = {'msg': 'Task deleted successfully'}
     json_data = jsonable_encoder(response_data)
     return JSONResponse(content=json_data)
