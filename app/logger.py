@@ -1,3 +1,7 @@
+"""
+Создаем и настраиваем логгеры
+"""
+
 import logging
 
 from app.config import config

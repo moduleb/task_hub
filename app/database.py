@@ -1,3 +1,7 @@
+"""
+Модуль установки соединения с базой данных
+"""
+
 from typing import Generator
 
 import mysql
@@ -9,14 +13,31 @@ from app.logger import db_log
 
 
 class DB:
+    """
+    Класс для взаимодействия с базой данных
+    """
     initialized = False
+
     def __init__(self):
+        """
+        Инициализирует класс DB и устанавливает соединение с базой данных,
+        если оно еще не было инициализировано.
+        """
         if not DB.initialized:
             db_log.debug('Class DB init process...')
             self.db = self.connect()
             DB.initialized = True
 
     def connect(self):
+        """
+        Устанавливает соединение с базой данных.
+
+        Returns:
+            db: Объект соединения с базой данных.
+
+        Raises:
+            HTTPException: Если не удалось установить соединение с базой данных.
+        """
         try:
             db = mysql.connector.connect(
                 host=config.db.host,
@@ -24,30 +45,54 @@ class DB:
                 password=config.db.password,
                 database=config.db.db_name,
             )
-            db_log.debug('DB created: %s',db)
+            db_log.debug('DB created: %s', db)
             return db
 
         except Exception as e:
-            db_log.critical('Failed to connect to the database: %s', e)
-            raise HTTPException(status_code=500, detail='Failed to connect to the database') from e
+            db_log.critical('Не удалось установить соединение с базой данных: %s', e)
+            raise HTTPException(status_code=500,
+                                detail='Не удалось установить соединение с базой данных'
+                                ) from e
 
     def is_connected(self):
+        """
+        Проверяет, активно ли соединение с базой данных.
+
+        Returns:
+            bool: True, если соединение активно, False - нет.
+        """
         status = self.db.is_connected()
         db_log.debug('DB is connected: %s', status)
         return status
 
     def reconnect_(self, attempts):
+        """
+        Пере-подключается к базе данных.
+
+        Args:
+            attempts (int): Количество попыток переподключения.
+        """
         self.db.reconnect(attempts=attempts)
         db_log.debug('DB reconnect...')
 
     def get_cursor(self) -> Generator:
+        """
+        Возвращает курсор базы данных.
 
+        Yields:
+            mysql.connector.cursor: Курсор базы данных.
+
+        Raises:
+            HTTPException:
+            Нне удалось установить соединение с базой данных,даже после переподключения.
+        """
         if not self.is_connected():
             self.reconnect_(attempts=3)
 
             if not self.is_connected():
-                db_log.error('Failed to connect to the database after reconnecting')
-                raise HTTPException(500, 'Failed to connect to the database')
+                db_log.error(
+                    'Не удалось установить соединение с базой данных, даже после переподключения')
+                raise HTTPException(500, 'Не удалось установить соединение с базой данных')
 
         try:
             cursor = self.db.cursor()
@@ -55,10 +100,13 @@ class DB:
             yield cursor
 
         except OperationalError as e:
-            db_log.debug('Failed to connect to the database: %s', e)
-            raise HTTPException(status_code=500, detail='Failed to connect to the database') from e
+            db_log.debug('Не удалось установить соединение с базой данных: %s', e)
+            raise HTTPException(status_code=500,
+                                detail='Не удалось установить соединение с базой данных'
+                                ) from e
 
         finally:
+            # Сохраняем изменения, закрываем курсор
             self.db.commit()
             db_log.debug('Database commit...')
             result = cursor.close()
