@@ -53,8 +53,8 @@ class TaskService:
 
         db_log.debug('QUERY: %s', query)
         cursor.execute(query)
-
         rows = cursor.fetchall()
+
 
         if rows and cursor.description is not None:
             # Получаем заголовки столбцов
@@ -80,7 +80,6 @@ class TaskService:
         cursor.execute(query)
 
         rows = cursor.fetchall()
-
         if rows and cursor.description is not None:
             # Получаем заголовки столбцов
             columns = [column[0] for column in cursor.description]

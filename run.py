@@ -1,3 +1,9 @@
+"""
+Создание приложения, регистрация endpoints,
+Переадресация для главной страницы
+Запуск приложения
+"""
+
 import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
@@ -15,14 +21,14 @@ app.include_router(tasks.router, prefix='/tasks', tags=["Tasks"])
 log.debug('Router registered: /tasks')
 
 
-# Перенаправление на /docs при обращении на "/"
 @app.get("/", response_class=RedirectResponse,
          include_in_schema=False)
 def redirect():
+    """Перенаправление на /docs при обращении на "/"""
     return "/docs"
 
 
 # Запуск приложения
 if __name__ == "__main__":
-    log.info('Configuration loaded: %s',config.config_type)
+    log.info('Configuration loaded: %s', config.config_type)
     uvicorn.run(app, host='0.0.0.0')

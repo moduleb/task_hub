@@ -76,18 +76,22 @@ async def get_all(cursor=Depends(db.get_cursor)) -> Response:
     return JSONResponse(content=json_data)
 
 
-# @router.put("/",
-#             summary="Обновление данных задания",
-#             description=" - Требует токен в заголовке Authorization \n"
-#                         " - Возвращает обновленную информацию")
-# async def update(data: TaskDTO,
-#                  cursor=Depends(db.get_cursor)) -> Response:
-#     pass
-# data.password = await AuthService.hash_pass(data.password)
-# await UserService.update(cursor, username, data)
-# data = await UserService.get_one_by_username(cursor, username)
-# json_data = jsonable_encoder({'data': data})
-# return JSONResponse(content=json_data)
+@router.put("/",
+             summary="Создание нового задания",
+             description=" - Требует токен в заголовке Authorization \n"
+                         " - Возвращает обновленную")
+async def update(data: TaskDTO, cursor=Depends(db.get_cursor)) -> Response:
+    """
+    При удачном добавлении записи db_service ничего не вернет.
+    При исключении, сам отправит HTTP ошибку.
+    """
+    # Создаем запись в базе данных.
+    await db_service.update(cursor, data)
+
+    # Формируем response, преобразовываем в json и отправляем.
+    response_data = {'msg': 'task updated successfully'}
+    json_data = jsonable_encoder(response_data)
+    return JSONResponse(content=json_data)
 
 
 @router.delete("/{task_id}",

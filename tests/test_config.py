@@ -1,7 +1,5 @@
 import importlib
-import os
 import app.config
-
 
 def test_config(monkeypatch):
     # Имитируем окружение 'production'
