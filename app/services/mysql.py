@@ -138,6 +138,6 @@ class TaskService:
         rowcount = cursor.rowcount
         db_log.debug('Количество обновленных строк в базе данных: %s', rowcount)
 
-        if cursor.rowcount > 1:
+        if cursor.rowcount != 1:
             db_log.debug('Количество обновленных строк на равно 1')
-            raise HTTPException(500, detail='Unknown database error')
+            raise HTTPException(400, detail='Задач обновлено: 0')
