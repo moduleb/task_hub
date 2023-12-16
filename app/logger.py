@@ -16,6 +16,9 @@ db_log.setLevel(level=getattr(logging, config.log.db_log_level))
 log = logging.getLogger('main')
 log.setLevel(level=getattr(logging, config.log.log_level))
 
+log_api = logging.getLogger('api')
+log_api.setLevel(level=getattr(logging, config.log.log_level))
+
 # Фиксируем форматирование
 # formatter = logging.Formatter('%(filename)s - %(levelname)s - %(message)s')
 # Создаем обработчик вывода в консоль

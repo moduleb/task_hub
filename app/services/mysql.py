@@ -3,9 +3,9 @@
 """
 from typing import List, Dict, Any
 
-from fastapi import HTTPException
 from mysql.connector import IntegrityError
 from mysql.connector.cursor import CursorBase
+from starlette.exceptions import HTTPException
 
 from app.logger import db_log
 from app.models.task_dto import TaskDTO
@@ -131,7 +131,7 @@ class TaskService:
         except IntegrityError as e:
             if 'Duplicate' in str(e):
                 db_log.debug('Task с таким названием уже существует: %s', e)
-                raise HTTPException(409, detail='Task с таким названием уже существует') from e
+                raise HTTPException(409, detail='Task already exist') from e
 
         # Проверяем количество удаленных строк, если изменилась 1, то все ок
         rowcount = cursor.rowcount

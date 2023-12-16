@@ -1,4 +1,3 @@
-# pip install python-dotenv
 """Файл настроек приложения"""
 import os
 from dataclasses import dataclass, field

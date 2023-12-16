@@ -16,3 +16,6 @@ class TaskDTO(BaseModel):
     description: Optional[str] = Field(None, max_length=500, pattern=PATTERN)
     category: Optional[str] = Field(None, max_length=100, pattern=PATTERN)
     # datetime: Optional[datetime] = Field(gt_datetime=datetime.now())
+
+class Message(BaseModel):
+    detail: str

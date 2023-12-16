@@ -11,23 +11,9 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-      redis:
-        condition: service_healthy
     networks:
      - my_network
     command: uvicorn run:app --host 0.0.0.0 --port 8000
-  redis:
-    container_name: internet_lab_redis
-    image: redis:latest
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    volumes:
-      - ./redis_data:/data
-    networks:
-      - my_network
   mysql:
     container_name: internet_lab_mysql
     image: mysql:latest
@@ -49,15 +35,6 @@ services:
       retries: 20
     networks:
      - my_network
-  tests:
-    container_name: internet_lab_tests
-    build:
-      context: .
-      dockerfile: Dockerfile.test
-    depends_on:
-      - app
-    networks:
-      - my_network
 networks:
   my_network:
     driver: bridge
