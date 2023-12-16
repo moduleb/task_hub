@@ -96,7 +96,7 @@ class TaskService:
         """
         Удаляет одну запись с заданным 'task_id'.
         """
-        query = 'DELETE FROM tasks WHERE id = %s', task_id
+        query = f'DELETE FROM tasks WHERE id = {task_id}'
 
         db_log.debug('QUERY: %s', query)
         cursor.execute(query)
@@ -115,15 +115,16 @@ class TaskService:
             raise HTTPException(500, detail='Unknown database error')
 
     @staticmethod
-    async def update(cursor: CursorBase, data: TaskDTO) -> None:
+    async def update(cursor: CursorBase, data: TaskDTO, task_id: int) -> None:
         """
         Обновляет одну запись в базе данных.
         """
         try:
             query = 'UPDATE tasks ' \
-                    f"SET taskname='{data.taskname}'," \
-                    f"description='{data.description}' " \
-                    f"WHERE category='{data.category}'"
+                    f"SET taskname='{data.taskname}', " \
+                    f"description='{data.description}', " \
+                    f"category='{data.category}' " \
+                    f"WHERE id = {task_id}"
 
             db_log.debug('QUERY: %s', query)
             cursor.execute(query)
@@ -137,6 +138,6 @@ class TaskService:
         rowcount = cursor.rowcount
         db_log.debug('Количество обновленных строк в базе данных: %s', rowcount)
 
-        if cursor.rowcount != 1:
-            db_log.debug('Количество удаленных строк на равно 1')
+        if cursor.rowcount > 1:
+            db_log.debug('Количество обновленных строк на равно 1')
             raise HTTPException(500, detail='Unknown database error')

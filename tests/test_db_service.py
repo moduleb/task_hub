@@ -200,11 +200,13 @@ class TestUpdate:
     @pytest.mark.asyncio
     async def test_update_ok(self, cursor, db_service, data):
         # Arrange
+        task_id = 1
         cursor.configure_mock(rowcount=1)
         query = 'UPDATE tasks ' \
                 f"SET taskname='{data.taskname}'," \
                 f"description='{data.description}' " \
-                f"WHERE category='{data.category}'"
+                f"category='{data.category}' " \
+                f"WHERE id = {task_id}"
 
         # Action
         await db_service.update(cursor, data)

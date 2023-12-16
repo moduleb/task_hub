@@ -2,10 +2,10 @@ version: "3.9"
 
 services:
   app:
-    container_name: internet_lab_app
+    container_name: task_hub_app
     build:
       context: .
-    image: goodwin954/internet_lab
+    image: goodwin954/task_hub
     ports:
       - "8000:8000"
     depends_on:
@@ -15,12 +15,12 @@ services:
      - my_network
     command: uvicorn run:app --host 0.0.0.0 --port 8000
   mysql:
-    container_name: internet_lab_mysql
+    container_name: task_hub_mysql
     image: mysql:latest
     environment:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
-      MYSQL_DATABASE: internet_lab
+      MYSQL_DATABASE: task_hub
       MYSQL_PORT: 3306
       MYSQL_ROOT_PASSWORD: root_password
     ports:
@@ -29,7 +29,7 @@ services:
      - ./mysql_data:/var/lib/mysql
      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: [ "CMD-SHELL", "mysqladmin ping -h mysql -u user -p$MYSQL_PASSWORD" ]
+      test: [ "CMD-SHELL", "mysqladmin ping -h mysql -u user -p $MYSQL_PASSWORD" ]
       interval: 5s
       timeout: 15s
       retries: 20
