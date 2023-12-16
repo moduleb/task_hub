@@ -32,7 +32,7 @@ db = DB()
              })
 async def create(data: TaskDTO, cursor=Depends(db.get_cursor)) -> Response:
     """
-    Создает новую задачу
+    Создает новую задачу\n
     Поле taskname обязательно и должно быть уникальным.
     """
 
@@ -54,7 +54,7 @@ async def create(data: TaskDTO, cursor=Depends(db.get_cursor)) -> Response:
             })
 async def get_one(task_id: int, cursor=Depends(db.get_cursor)) -> Response:
     """
-    Получаем информацию о задаче заданным task_id.
+    Получаем информацию о задаче заданным task_id.\n
     При отсутствии задачи с таким id, получим ошибку 404
     """
     data = await db_service.get_one(cursor, task_id)
@@ -72,7 +72,7 @@ async def get_one(task_id: int, cursor=Depends(db.get_cursor)) -> Response:
             })
 async def get_all(cursor=Depends(db.get_cursor)) -> Response:
     """
-    Получаем информацию о всех задачах
+    Получаем информацию о всех задачах\n
     При отсутствии задач, получим ошибку 404
     """
     data: list = await db_service.get_all(cursor)
@@ -92,8 +92,8 @@ async def get_all(cursor=Depends(db.get_cursor)) -> Response:
             })
 async def update(data: TaskDTO, task_id: int, cursor=Depends(db.get_cursor)) -> Response:
     """
-    Обновляет информацию о задаче с заданным id
-    Поле taskname обязательно и должно быть уникальным.
+    Обновляет информацию о задаче с заданным id\n
+    Поле taskname обязательно и должно быть уникальным.\n
     При отсутствии задачи с таким id, получим ошибку 404
     """
     # Создаем запись в базе данных.
@@ -113,7 +113,7 @@ async def update(data: TaskDTO, task_id: int, cursor=Depends(db.get_cursor)) -> 
                })
 async def delete(task_id: int, cursor=Depends(db.get_cursor)) -> None:
     """
-    Удаляет задачу с заданным id
+    Удаляет задачу с заданным id\n
     При отсутствии задачи с таким id, получим ошибку 404
     """
     await db_service.delete(cursor, task_id)

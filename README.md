@@ -64,7 +64,7 @@ docker compose up -d --build
 
 # API Endpoints
 
-- Address: [http://0.0.0.0:8000](http://0.0.0.0:8000/tasks)
+- Address: [http://0.0.0.0:8000](http://0.0.0.0:8000)
 - Документация Swagger [http://0.0.0.0:8000/docs](http://0.0.0.0:8000/docs)
 
 <a id="update"></a>
