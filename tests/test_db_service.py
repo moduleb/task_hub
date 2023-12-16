@@ -11,7 +11,7 @@ class TestDelete:
         # Arrange
         task_id = 1
         cursor.configure_mock(rowcount=1)
-        query = 'DELETE FROM tasks WHERE id = %s', task_id
+        query = f'DELETE FROM tasks WHERE id = {task_id}'
 
         # Action
         await db_service.delete(cursor, task_id)
@@ -203,13 +203,13 @@ class TestUpdate:
         task_id = 1
         cursor.configure_mock(rowcount=1)
         query = 'UPDATE tasks ' \
-                f"SET taskname='{data.taskname}'," \
-                f"description='{data.description}' " \
+                f"SET taskname='{data.taskname}', " \
+                f"description='{data.description}', " \
                 f"category='{data.category}' " \
                 f"WHERE id = {task_id}"
 
         # Action
-        await db_service.update(cursor, data)
+        await db_service.update(cursor, data, task_id)
 
         # Assert
         cursor.execute.assert_called_once_with(query)
@@ -217,22 +217,24 @@ class TestUpdate:
     @pytest.mark.asyncio
     async def test_update_err409_duplicate(self, cursor, db_service, data):
         # Arrange
+        task_id = 1
         cursor.configure_mock(rowcount=1)
         cursor.execute.side_effect = IntegrityError('Duplicate error')
 
         # Action & Assert
         with pytest.raises(HTTPException) as e:
-            await db_service.update(cursor, data)
+            await db_service.update(cursor, data, task_id)
         assert e.value.status_code == 409
-        assert e.value.detail == 'Task с таким названием уже существует'
+        assert e.value.detail == 'Task already exist'
 
     @pytest.mark.asyncio
     async def test_update_err500(self, cursor, db_service, data):
         # Arrange
+        task_id = 1
         # Устанавливаем количество удаленных строк - 0, ни одной строки не создалось. такого быть не должно
         cursor.configure_mock(rowcount=0)
 
         # Action & Assert
         with pytest.raises(HTTPException) as e:
-            await db_service.update(cursor, data)
-        assert e.value.status_code == 500
+            await db_service.update(cursor, data, task_id)
+        assert e.value.status_code == 400

@@ -5,7 +5,7 @@ from typing import List, Dict, Any
 
 from mysql.connector import IntegrityError
 from mysql.connector.cursor import CursorBase
-from starlette.exceptions import HTTPException
+from fastapi import HTTPException
 
 from app.logger import db_log
 from app.models.task_dto import TaskDTO
