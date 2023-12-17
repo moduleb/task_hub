@@ -13,7 +13,7 @@ from app.logger import log
 from app.routers import tasks
 
 # Создание приложения
-app = FastAPI()
+app = FastAPI(title="Task Hub")
 log.debug('App created: %s', app)
 
 # Регистрация эндпоинтов

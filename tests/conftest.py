@@ -4,7 +4,7 @@ import os
 import pytest
 from unittest.mock import MagicMock
 
-from app.models.task_dto import TaskDTO
+from app.schemes.task import TaskValidation
 from app.services.mysql import TaskService
 
 
@@ -14,7 +14,7 @@ def cursor():
 
 @pytest.fixture
 def data():
-    return TaskDTO(
+    return TaskValidation(
         taskname='Task 1',
         description='Description 1',
         category='Category 1'

@@ -189,10 +189,10 @@ docker compose up -d --build
 
 **Яшин Роман Игоревич**
 
- Контакты: | .                                                
-----------:|--------------------------------------------------
-   GitHub: | [github.com/moduleb](https://github.com/moduleb) 
-    email: | t3841@yandex.ru                                  
-    phone: | +79024127523                                     
-       tg: | @popcorn138                                      
+|      Контакты: | .                                                |
+|---------------:|--------------------------------------------------|
+|        GitHub: | [github.com/moduleb](https://github.com/moduleb) |
+|         email: | t3841@yandex.ru                                  |
+|         phone: | +79024127523                                     |
+|            tg: | @popcorn138                                      |
 

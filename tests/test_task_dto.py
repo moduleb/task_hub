@@ -4,7 +4,7 @@ import string
 import pytest as pytest
 from pydantic_core._pydantic_core import ValidationError
 
-from app.models.task_dto import TaskDTO
+from app.schemes.task import TaskValidation
 
 spec_chars = string.punctuation
 
@@ -25,6 +25,6 @@ values = [
 @pytest.mark.parametrize("desc, value, result", values)
 def test_dto(desc, value, result):
     try:
-        TaskDTO(taskname=value)
+        TaskValidation(taskname=value)
     except ValidationError:
         assert result == ValidationError

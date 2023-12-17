@@ -8,7 +8,7 @@ from mysql.connector.cursor import CursorBase
 from fastapi import HTTPException
 
 from app.logger import db_log
-from app.models.task_dto import TaskDTO
+from app.schemes.task import TaskValidation
 
 
 class TaskService:
@@ -20,7 +20,7 @@ class TaskService:
         db_log.debug('Class TaskService init process...')
 
     @staticmethod
-    async def create(cursor: CursorBase, data: TaskDTO) -> None:
+    async def create(cursor: CursorBase, data: TaskValidation) -> None:
         """
         Создает одну запись в базе данных.
         """
@@ -115,7 +115,7 @@ class TaskService:
             raise HTTPException(500, detail='Unknown database error')
 
     @staticmethod
-    async def update(cursor: CursorBase, data: TaskDTO, task_id: int) -> None:
+    async def update(cursor: CursorBase, data: TaskValidation, task_id: int) -> None:
         """
         Обновляет одну запись в базе данных.
         """
