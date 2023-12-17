@@ -15,10 +15,10 @@ class TaskValidation(BaseModel):
     taskname: str = Field(
         min_length=3, max_length=100, pattern=PATTERN,
         examples=['Task 1', 'Student Work 15'])
-    description: str = Field(
+    description: Optional[str] = Field(
         default=None, max_length=500, pattern=PATTERN,
         examples=['Draw a picture', 'Do homework'])
-    category: str = Field(
+    category: Optional[str] = Field(
         default=None, max_length=100, pattern=PATTERN,
         examples=['Hobby', 'Study'])
 
