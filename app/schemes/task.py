@@ -14,7 +14,7 @@ class TaskValidation(BaseModel):
     """
     taskname: str = Field(
         min_length=3, max_length=100, pattern=PATTERN,
-        unique=True, examples=['Task 1', 'Student Work 15'])
+        examples=['Task 1', 'Student Work 15'])
     description: str = Field(
         default=None, max_length=500, pattern=PATTERN,
         examples=['Draw a picture', 'Do homework'])
@@ -29,8 +29,8 @@ class TaskView(BaseModel):
     """
     id: int = Field(examples=[1])
     taskname: str = Field(examples=['Task 1', 'Student Work 15'])
-    description: str = Field(examples=['Draw a picture', 'Do homework'], default=True)
-    category: str = Field(examples=['Hobby', 'Study'], default=True)
+    description: str = Field(examples=['Draw a picture', 'Do homework'], default=None)
+    category: str = Field(examples=['Hobby', 'Study'], default=None)
     creation_date: str = Field(examples=["2023-12-11T19:35:46"])
 
 class TasksListResponse(BaseModel):
