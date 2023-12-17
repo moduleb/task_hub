@@ -9,8 +9,8 @@
 + [Описание](#description)
 + [Установка и запуск](#install)
 + [API Endpoints:](#api_endpoints)
-    + [Создание новой задачи](#post)
-    + [Получение списка всех задач](#get)
+    + [Создание новой задачи](#create)
+    + [Получение списка всех задач](#get_all)
     + [Получение задачи по идентификатору](#get_one)
     + [Обновление задачи](#update)
     + [Удаление задачи](#delete)
@@ -67,26 +67,24 @@ docker compose up -d --build
 - Address: [http://0.0.0.0:8000](http://0.0.0.0:8000)
 - Документация Swagger [http://0.0.0.0:8000/docs](http://0.0.0.0:8000/docs)
 
-<a id="update"></a>
+<a id="create"></a>
 
-## Update
+## Create
 
-> Обновление информации о задаче
+> Создание новой задачи
 
 #### Request
 
-**`PUT /tasks`**
+**`POST /tasks`**
+
+>'taskname' должно быть уникальным, остальные поля могут быть пустыми
 
 ```json
-{
-  "data": [
-    {
-      "taskname": "Task1",
-      "description": "Create a picture",
-      "category": "Hobby"
-    }
-  ]
-}
+  {
+    "taskname": "Task1",
+    "description": "Create a picture",
+    "category": "Hobby"
+  }
 ```
 
 #### Response
@@ -95,25 +93,14 @@ docker compose up -d --build
 
 ```json
 {
-  "detail": "Task updated successfully"
+  "detail": "Task created successfully"
 }
 ```
 
-## Delete
-
-> Удаление задачи
-
-#### Request
-
-`DELETE /tasks/{task_id}`
-
-#### Response
-
-`204 No Content`
+---
 
 <a id="get_one"></a>
-
-## Get info
+## Get one
 
 > Получение информации о задаче
 
@@ -138,8 +125,7 @@ docker compose up -d --build
 ```
 
 <a id="get_all"></a>
-
-## Get info
+## Get all
 
 > Получение информации о всех заданиях
 
@@ -171,6 +157,54 @@ docker compose up -d --build
   ]
 }
 ```
+
+---
+
+<a id="update"></a>
+## Update
+
+> Обновление информации о задаче
+
+#### Request
+
+**`PUT /tasks`**
+
+>'taskname' должно быть уникальным, остальные поля могут быть пустыми
+
+```json
+  {
+    "taskname": "Task1",
+    "description": "Create a picture",
+    "category": "Hobby"
+  }
+```
+
+#### Response
+
+`200 Successful`
+
+```json
+{
+  "detail": "Task updated successfully"
+}
+```
+
+---
+
+<a id="delete"></a>
+## Delete
+> Удаление задачи
+
+#### Request
+
+`DELETE /tasks/{task_id}`
+
+#### Response
+
+`204 No Content`
+
+
+---
 
 <a id="errors"></a>
 
