@@ -216,17 +216,4 @@ docker compose up -d --build
 - **422 Unprocessable Entity** - поле содержит недопустимые символы
 - **500 Internal Server Error** - внутренняя ошибка сервера
 
----
-<a id="contacts"></a>
-
-## Автор
-
-**Яшин Роман Игоревич**
-
-|      Контакты: | .                                                |
-|---------------:|--------------------------------------------------|
-|        GitHub: | [github.com/moduleb](https://github.com/moduleb) |
-|         email: | t3841@yandex.ru                                  |
-|         phone: | +79024127523                                     |
-|            tg: | @popcorn138                                      |
 
